@@ -88,9 +88,14 @@ class ShiftGenerateCommand extends ContainerAwareCommand
                         $current_shift = clone $shift;
                         $current_shift->setJob($period->getJob());
                         $current_shift->setFormation($position->getFormation());
-                        if ($last_cycle_shifters_array && $i < count($last_cycle_shifters_array)) {
-                            $current_shift->setLastShifter($last_cycle_shifters_array[$i]);
-                            $reservedShifts[] = $current_shift;
+//                        if ($last_cycle_shifters_array && $i < count($last_cycle_shifters_array)) {
+//                            $current_shift->setLastShifter($last_cycle_shifters_array[$i]);
+//                            $reservedShifts[] = $current_shift;
+//                        }
+                        if (!$current_shift->isFixe()) {
+                            $current_shift->setShifter(null);
+                            $current_shift->setBookedTime(null);
+                            $current_shift->setBooker(null);
                         }
                         $em->persist($current_shift);
                         $count++;
