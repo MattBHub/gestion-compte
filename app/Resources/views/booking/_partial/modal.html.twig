@@ -39,12 +39,17 @@
         {% else %}
             <p>Nombre de places restantes : {{ nbBookableShifts }}/{{ nbShifts }}</p>
             {% for availableShift in availableShifts %}
-                {% if availableShift.formation %}
-                    <div>
-                        <input type="radio" id="{{ availableShift.id }}" class="checkedFormation" name="formation" value="{{ availableShift.id }}">
-                        <label for="{{ availableShift.id }}" style="color: #5f5a5a; font-weight: 600;">{{ availableShift.formation.name }}</label>
-                    </div>
-                {% endif %}
+                <div>
+                    <input type="radio" id="{{ availableShift.id }}" class="checkedFormation" name="formation"
+                           value="{{ availableShift.id }}">
+                    <label for="{{ availableShift.id }}" style="color: #5f5a5a; font-weight: 600;">
+                        {% if availableShift.formation %}
+                            {{ availableShift.formation.name }}
+                        {% else %}
+                            en formation
+                        {% endif %}
+                    </label>
+                </div>
             {% endfor %}
 
             <p>Ce créneau sera fait en tant que :</p>
@@ -54,7 +59,7 @@
             </div>
             <div>
                 <input type="radio" id="fixe{{ firstBookable.id }}" class="checkedTypeService" name="typeService" value=1>
-                <label for="fixe{{ firstBookable.id }}" style="color: #5f5a5a; font-weight: 600;">fixe (reporté toutes les 4 semaines)</label>
+                <label for="fixe{{ firstBookable.id }}" style="color: #5f5a5a; font-weight: 600;">fixe (reporté à chaque cycle)</label>
             </div>
             <div class="" style="position: fixed;top:0;width: 100%;left: 0;">
                 {% if nbBookableShifts < nbShifts %}

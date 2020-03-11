@@ -85,19 +85,22 @@
                     <li id="shift{{ shift.id }}">
                         <div class="collapsible-header">
                             {% if shift.formation %}
-                            <b data-formation="{{ shift.formation.name }}">
-                                {% endif %}
+                                <b data-formation="{{ shift.formation.name }}">
+                            {% else %}
+                                <b>
+                            {% endif %}
                                 <span style="font-style: italic">
                             {% if shift.lastShifter %}réservé à {{ shift.lastShifter.displayName }}
                             {% else %}libre
                             {% endif %}
                             </span>
-                                {% if shift.formation %}
-                            </b>&nbsp;({{ shift.formation.name }})
+                            {% if shift.formation %}
+                                </b>&nbsp;({{ shift.formation.name }})
+                            {% else %}
+                                </b>&nbsp;(en formation)
                             {% endif %}
                         </div>
                         <div class="collapsible-body">
-{#                            <form action="{{ path('admin_shift_book',{'id': shift.id }) }}" method="post">#}
                                 <div class="row">
                                     <div class="input-field col s7">
                                         <input id ="benef{{ shift.id }}" type="text" class="empty-shift" name="beneficiary" placeholder="Beneficiaire">
@@ -116,7 +119,6 @@
                                         <button class="btn add" disabled="disabled" onclick="postShift({{ shift.id }})">Ajouter</button>
                                     </div>
                                 </div>
-{#                            </form>#}
                         </div>
                     </li>
                 {% endif %}
