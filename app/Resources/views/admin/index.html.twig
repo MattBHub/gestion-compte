@@ -26,7 +26,7 @@
             {% if is_granted("ROLE_FINANCE_MANAGER") %}
                 <h6><i class="material-icons">attach_money</i>&nbsp;Finances</h6>
                 <a href="{{ path("registrations") }}" class="waves-effect waves-light btn indigo"><i class="material-icons left">attach_money</i>Gérer les Adhésions / Réadhésions</a>
-                <a href="{{ path("helloasso_payments") }}" class="waves-effect waves-light btn indigo"><i class="material-icons left">settings_ethernet</i>Paiements helloasso</a>
+{#                <a href="{{ path("helloasso_payments") }}" class="waves-effect waves-light btn indigo"><i class="material-icons left">settings_ethernet</i>Paiements helloasso</a>#}
             {% endif %}
 
             {% if is_granted("ROLE_SHIFT_MANAGER") %}
@@ -72,9 +72,9 @@
             <h6>Admins</h6>
             <a href="{{ path("user_install_admin") }}" class="waves-effect waves-light btn deep-purple"><i class="material-icons left">add</i>Ajouter un admin</a>
             <a href="{{ path("admins_list") }}" class="waves-effect waves-light btn deep-purple"><i class="material-icons left">list</i>Liste des utilisateurs admin</a>
-            <h6>Divers</h6>
-            <a href="{{ path("admin_clients") }}" class="waves-effect waves-light btn"><i class="material-icons left">vpn_key</i>Gérer les clients Oauth</a>
-            <a href="{{ path("admin_services") }}" class="waves-effect waves-light btn"><i class="material-icons left">extension</i>Gérer les services</a>
+{#            <h6>Divers</h6>#}
+{#            <a href="{{ path("admin_clients") }}" class="waves-effect waves-light btn"><i class="material-icons left">vpn_key</i>Gérer les clients Oauth</a>#}
+{#            <a href="{{ path("admin_services") }}" class="waves-effect waves-light btn"><i class="material-icons left">extension</i>Gérer les services</a>#}
         {% endif %}
         </div>
 
