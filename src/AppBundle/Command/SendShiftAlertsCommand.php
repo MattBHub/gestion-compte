@@ -2,6 +2,7 @@
 // src/AppBundle/Command/SendShiftAlertsCommand.php
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Shift;
 use AppBundle\Entity\ShiftAlert;
 use AppBundle\Entity\ShiftBucket;
 use DateTime;
@@ -62,14 +63,17 @@ class SendShiftAlertsCommand extends ContainerAwareCommand
                 $bucket = new ShiftBucket();
                 $buckets[$interval] = $bucket;
             }
-            $buckets[$interval]->addShift($shift);
+
+            // ne prend que les shifts avec formation
+            if ($shift->getFormation() != null)
+                $buckets[$interval]->addShift($shift);
         }
 
         $alerts = array();
         foreach ($buckets as $bucket) {
             $shifterCount = $bucket->getShifterCount();
-            if ($shifterCount < 2) {
-                $issue = $shifterCount . ' personnes inscrites sur ' . count($bucket->getShifts());
+            if ($shifterCount < count($bucket->getShifts())) {
+                $issue = $shifterCount . ' personnes formées inscrites sur ' . count($bucket->getShifts());
                 $alerts[] = new ShiftAlert($bucket, $issue);
             }
         }
@@ -130,8 +134,8 @@ class SendShiftAlertsCommand extends ContainerAwareCommand
             $response = $client->request('POST', $mmHookUrl, [
                 'json' => ['text' => $content]
             ]);
+            $output->writeln('<fg=cyan;>Alerts posted on Mattermost</>');
         }
-        $output->writeln('<fg=cyan;>Alerts posted on Mattermost</>');
     }
 
 }
