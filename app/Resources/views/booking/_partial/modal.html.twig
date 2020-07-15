@@ -39,6 +39,19 @@
         {% if beneficiary.membership.beneficiaries | length < 1 %}
             <p>Vous n'avez pas de bénéficiares</p>
         {% else %}
+            <p style="color: #5f5a5a; font-weight: 400;">Places déjà occupées : </p>
+            {% for shift in bucket.sortedShifts() %}
+                <div>
+                    {% if shift.shifter and not shift.isDismissed() %}
+                        <i style="color: #5f5a5a; font-weight: 400;">
+                            {{ shift.shifter.firstname }}&nbsp;{{ shift.shifter.lastname|first|upper }}.
+                            {% if shift.formation %}
+                                ({{ shift.formation.name }})
+                            {% endif %}
+                        </i>&nbsp;
+                    {% endif %}
+                </div>
+            {% endfor %}
             <p>Nombre de places restantes : {{ nbBookableShifts }}/{{ nbShifts }}</p>
             {% for availableShift in availableShifts %}
                 <div>
