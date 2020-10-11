@@ -85,6 +85,7 @@
                         </div>
                         <div class="homebox">
                             <h5><span class="white">En ce moment</span></h5>
+                            {{ render(controller("AppBundle:Code:homepageDashboard")) }}
                             <a href="{{ path("schedule") }}" class="waves-effect waves-light btn teal darken-1" style="min-width: 240px"><i class="material-icons left">schedule</i>Planning</a><br><br>
                             <a href="{{ path("tasks_list") }}" class="waves-effect waves-light btn blue-grey" style="min-width: 240px"><i class="material-icons left">list</i>Taches en cours</a><br>
                             <a href="{{ path("process_update_list") }}" class="btn blue-grey" id="news_home_button" style="min-width: 240px">
@@ -127,8 +128,6 @@
                     <div class="col offset-xl3 xl6 m8 offset-m2 s12">
                         <div class="homebox">
                             <h5><span class="white"><i class="material-icons">build</i>&nbsp;Action !</span></h5>
-
-                            {{ render(controller("AppBundle:Code:homepageDashboard")) }}
 
                             {% if is_granted("access_tools",app.user) %}
                                 <a href="{{ path("user_office_tools") }}" class="waves-effect waves-light btn teal">

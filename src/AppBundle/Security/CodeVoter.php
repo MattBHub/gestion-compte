@@ -81,7 +81,7 @@ class CodeVoter extends Voter
                 return $this->canAdd($code, $user);
             case self::OPEN:
             case self::EDIT:
-                if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+                if ($this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN'))) {
                     return true;
                 }
             case self::DELETE:
@@ -128,6 +128,8 @@ class CodeVoter extends Voter
             $in_some_time = new \DateTime();
             $some_time_ago->sub(new \DateInterval("PT2H")); //time - 120min TODO put in conf
             $in_some_time->add(new \DateInterval("PT1H")); //time + 60min TODO put in conf
+
+            // display code si on est à moins d'1h du début et moins de 2h après la fin
             foreach ($shifts as $shift) {
                 if (($shift->getStart() < $in_some_time) && // dans une heure il sera commencé
                     $shift->getStart() > $y && // le début est aujourd'hui (après hier 23h59:59)
