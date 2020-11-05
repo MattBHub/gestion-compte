@@ -97,6 +97,9 @@ parameters:
     display_gauge: true
     use_fly_and_fixed: false
 
+    # Default formations
+    default_formation_ids: []
+
     logging.mattermost.enabled: false
     logging.mattermost.level: 'critical'
     logging.mattermost.url: 'http://mattermost.yourcoop.local'
