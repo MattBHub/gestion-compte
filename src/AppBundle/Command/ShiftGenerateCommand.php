@@ -68,6 +68,9 @@ class ShiftGenerateCommand extends ContainerAwareCommand
                 ->setParameter('dow', $dayOfWeek)
                 ->orderBy('p.start');
             $periods = $qb->getQuery()->getResult();
+
+            echo "\nCréation du : ". $from->format("d-m-Y H:i"). " au : ". $to->format("d-m-Y H:i");
+
             foreach ($periods as $period) {
                 $shift = new Shift();
                 $start = date_create_from_format('Y-m-d H:i', $date->format('Y-m-d') . ' ' . $period->getStart()->format('H:i'));
@@ -75,37 +78,48 @@ class ShiftGenerateCommand extends ContainerAwareCommand
                 $end = date_create_from_format('Y-m-d H:i', $date->format('Y-m-d') . ' ' . $period->getEnd()->format('H:i'));
                 $shift->setEnd($end);
 
+                $lastStart = $this->lastCycleDate($start);
+                $lastEnd = $this->lastCycleDate($end);
+
+                echo "\n Copie du créneau du : ". $lastStart->format("d-m-Y") . " de " .$lastStart->format("H:i")." à : ". $lastEnd->format("H:i");
+
                 foreach ($period->getPositions() as $position) {
 
-                    $lastStart = $this->lastCycleDate($start);
-                    $lastEnd = $this->lastCycleDate($end);
+                    echo "\n  Poste : ". $position->getFormation();
 
                     $last_cycle_shifts = $em->getRepository('AppBundle:Shift')->findBy(array('start' => $lastStart, 'end' => $lastEnd, 'job' => $period->getJob(), 'formation' => $position->getFormation()));
                     $last_cycle_shifts =  array_filter($last_cycle_shifts, function($shift) {return $shift->getShifter();});
                     $last_cycle_shifters_array = array();
                     foreach ($last_cycle_shifts as $last_cycle_shift){
+//                        echo "\n shifter : ". $last_cycle_shift->getShifter()->getLastName() ." (id: ". $last_cycle_shift->getShifter()->getId().")";
                         $last_cycle_shifters_array[] = $last_cycle_shift; //clean keys
                     }
 
                     $existing_shifts = $em->getRepository('AppBundle:Shift')->findBy(array('start' => $start, 'end' => $end, 'job' => $period->getJob(), 'formation' => $position->getFormation()));
                     $count2 += count($existing_shifts);
+
+                    // Création des créneaux manquants
                     for ($i=0; $i<$position->getNbOfShifter()-count($existing_shifts); $i++){
                         $current_shift = clone $shift;
                         $current_shift->setJob($period->getJob());
                         $current_shift->setFormation($position->getFormation());
-                        // si pas de precedent shifter
-                        if (!isset($last_cycle_shifters_array[$i])
-                            // ou que c'est un shift qui ne doit pas être repris
-                            || ($use_fly_and_fixed && !$last_cycle_shifters_array[$i]->isFixe())
-                        ) {
-                            $current_shift->setShifter(null);
-                            $current_shift->setBookedTime(null);
-                            $current_shift->setBooker(null);
-                        } else {
-                            $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
-                            $current_shift->setFixe($last_cycle_shifters_array[$i]->isFixe());
-                            $reservedShifts[$count] = $current_shift;
-                            $oldShifts[$count] = $last_cycle_shifters_array[$i];
+                        $current_shift->setShifter(null);
+                        $current_shift->setBookedTime(null);
+                        $current_shift->setBooker(null);
+
+                        if (isset($last_cycle_shifters_array[$i])) {
+                            if (!$use_fly_and_fixed){
+                                $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
+                                $reservedShifts[$count] = $current_shift;
+                                $oldShifts[$count] = $last_cycle_shifters_array[$i];
+                            } else {
+                                if ($last_cycle_shifters_array[$i]->isFixe()){
+                                    $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
+                                    $current_shift->setFixe($last_cycle_shifters_array[$i]->isFixe());
+                                    $reservedShifts[$count] = $current_shift;
+                                    $oldShifts[$count] = $last_cycle_shifters_array[$i];
+                                }
+                            }
                         }
 
                         $em->persist($current_shift);
