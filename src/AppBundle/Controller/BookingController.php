@@ -482,7 +482,7 @@ class BookingController extends Controller
                 $shift->setShifter($beneficiary);
                 $shift->setBookedTime(new DateTime('now'));
                 $shift->setLastShifter(null);
-                $shift->setFixe(false);
+//                $shift->setFixe(false);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($shift);
                 $em->flush();
