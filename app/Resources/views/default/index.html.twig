@@ -125,25 +125,25 @@
                     <div class="col s12">
                         {{ render(controller("AppBundle:Booking:homepageShifts")) }}
                     </div>
-                    <div class="col offset-xl3 xl6 m8 offset-m2 s12">
-                        <div class="homebox">
-                            <h5><span class="white"><i class="material-icons">build</i>&nbsp;Action !</span></h5>
+{#                    <div class="col offset-xl3 xl6 m8 offset-m2 s12">#}
+{#                        <div class="homebox">#}
+{#                            <h5><span class="white"><i class="material-icons">build</i>&nbsp;Action !</span></h5>#}
 
-                            {% if is_granted("access_tools",app.user) %}
-                                <a href="{{ path("user_office_tools") }}" class="waves-effect waves-light btn teal">
-                                    <i class="material-icons left">folder_shared</i>Notes collectives</a>
-                                <br>
-                            {% endif %}
+{#                            {% if is_granted("access_tools",app.user) %}#}
+{#                                <a href="{{ path("user_office_tools") }}" class="waves-effect waves-light btn teal">#}
+{#                                    <i class="material-icons left">folder_shared</i>Notes collectives</a>#}
+{#                                <br>#}
+{#                            {% endif %}#}
 
-                            {% if app.user.beneficiary and app.user.beneficiary.ownedCommissions | length %}
-                                <h5>Mes commissions</h5>
-                                {% for com in app.user.beneficiary.ownedCommissions %}
-                                    <a href="{{ path("commission_edit",{'id': com.id }) }}"
-                                       class="waves-effect waves-light btn blue-grey">Gérer la
-                                        commission {{ com.name }}</a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+{#                            {% if app.user.beneficiary and app.user.beneficiary.ownedCommissions | length %}#}
+{#                                <h5>Mes commissions</h5>#}
+{#                                {% for com in app.user.beneficiary.ownedCommissions %}#}
+{#                                    <a href="{{ path("commission_edit",{'id': com.id }) }}"#}
+{#                                       class="waves-effect waves-light btn blue-grey">Gérer la#}
+{#                                        commission {{ com.name }}</a>#}
+{#                                {% endfor %}#}
+{#                            {% endif %}#}
+{#                        </div>#}
                     </div>
                 {% endif %}
             </div>

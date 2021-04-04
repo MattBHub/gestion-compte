@@ -99,27 +99,47 @@ class ShiftGenerateCommand extends ContainerAwareCommand
                     $count2 += count($existing_shifts);
 
                     // Création des créneaux manquants
+
+//                    for ($i=0; $i<$position->getNbOfShifter()-count($existing_shifts); $i++){
+//                        $current_shift = clone $shift;
+//                        $current_shift->setJob($period->getJob());
+//                        $current_shift->setFormation($position->getFormation());
+//                        $current_shift->setShifter(null);
+//                        $current_shift->setBookedTime(null);
+//                        $current_shift->setBooker(null);
+//
+//                        if (isset($last_cycle_shifters_array[$i])) {
+//                            if (!$use_fly_and_fixed){
+//                                $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
+//                                $reservedShifts[$count] = $current_shift;
+//                                $oldShifts[$count] = $last_cycle_shifters_array[$i];
+//                            } else {
+//                                if ($last_cycle_shifters_array[$i]->isFixe()){
+//                                    $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
+//                                    $current_shift->setFixe($last_cycle_shifters_array[$i]->isFixe());
+//                                    $reservedShifts[$count] = $current_shift;
+//                                    $oldShifts[$count] = $last_cycle_shifters_array[$i];
+//                                }
+//                            }
+//                        }
+
                     for ($i=0; $i<$position->getNbOfShifter()-count($existing_shifts); $i++){
                         $current_shift = clone $shift;
                         $current_shift->setJob($period->getJob());
                         $current_shift->setFormation($position->getFormation());
-                        $current_shift->setShifter(null);
-                        $current_shift->setBookedTime(null);
-                        $current_shift->setBooker(null);
-
-                        if (isset($last_cycle_shifters_array[$i])) {
-                            if (!$use_fly_and_fixed){
-                                $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
-                                $reservedShifts[$count] = $current_shift;
-                                $oldShifts[$count] = $last_cycle_shifters_array[$i];
-                            } else {
-                                if ($last_cycle_shifters_array[$i]->isFixe()){
-                                    $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
-                                    $current_shift->setFixe($last_cycle_shifters_array[$i]->isFixe());
-                                    $reservedShifts[$count] = $current_shift;
-                                    $oldShifts[$count] = $last_cycle_shifters_array[$i];
-                                }
-                            }
+                        // si pas de precedent shifter
+                        if (!isset($last_cycle_shifters_array[$i])
+                            // ou que c'est un shift qui ne doit pas être repris
+                            || ($use_fly_and_fixed && !$last_cycle_shifters_array[$i]->isFixe())
+                        ) {
+                            $current_shift->setShifter(null);
+                            $current_shift->setBookedTime(null);
+                            $current_shift->setBooker(null);
+                        } else {
+                            $current_shift->setLastShifter($last_cycle_shifters_array[$i]->getShifter());
+                            $current_shift->setFixe($last_cycle_shifters_array[$i]->isFixe());
+                            $reservedShifts[$count] = $current_shift;
+                            $oldShifts[$count] = $last_cycle_shifters_array[$i];
                         }
 
                         $em->persist($current_shift);
